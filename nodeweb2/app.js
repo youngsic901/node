@@ -7,7 +7,8 @@ import jikwonRouter from './routes/jikwon.js';
 import gogekRouter from './routes/gogek.js'
 
 const app = express();
-app.use(cors())
+app.use(cors());
+app.use(express.json());    // 직원(json 형식) 추가시 JSON 형식의 요청 본문을 파싱할 수 있는 미들웨어 추가
 
 app.set('port', process.env.PORT || 3000);
 

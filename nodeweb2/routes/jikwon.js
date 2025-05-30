@@ -24,4 +24,23 @@ router.get('/main', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/main.html'));
 });
 
+const emps = [
+    {id:1, name:'손오공'},
+    {id:2, name:'저팔계'},
+    {id:3, name:'사오정'}
+];
+
+router.get('/emps', (req, res) => {
+    res.json(emps);
+});
+
+router.post('/emps', (req, res) => {
+    const newEmp = req.body;
+    if(!newEmp || !newEmp.name) {
+        return res.status(400).json({error:'invalid emp data'});
+    }
+    emps.push(newEmp);
+    res.status(201).json(newEmp);
+});
+
 export default router;

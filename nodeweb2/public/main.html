@@ -7,5 +7,56 @@
 </head>
 <body>
     <h1>메인 페이지</h1>
+    <h3>** 직원 정보 목록 **</h3>
+    <ul id="emp-list"></ul>
+    get : <button id="get-emp">직원보기(get)</button>
+    <br/>
+    post : 
+    <input type="text" id="emp-name" placeholder="이름입력" required>
+    <button id="add-emp">직원추가(post)</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const empList = document.getElementById("emp-list");
+            const empNameInput = document.getElementById("emp-name");
+            const getEmpButton = document.getElementById("get-emp");
+            const addEmpButton = document.getElementById("add-emp");
+
+            // get으로 직원 읽기
+            getEmpButton.addEventListener('click', () => {
+                fetch('/jikwon/emps', {method:'GET'})
+                .then(response => response.json())
+                .then(data => {
+                    empList.innerHTML = '';
+                    data.forEach(emp => {
+                        const li = document.createElement('li');
+                        li.textContent = emp.name;
+                        empList.appendChild(li);
+                    });
+                })
+                .catch(error => console.log('직원읽기 오류 : ', error));
+            });
+
+            // post로 직원 추가
+            addEmpButton.addEventListener('click', () => {
+                const newEmp = {id:Date.now(), name:empNameInput.value};
+                fetch('/jikwon/emps', {
+                    method:'POST',
+                    headers: {
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify(newEmp) // JSON 객체를 문자열로 변환
+                })
+                .then(response => response.json())
+                .then(emp => {
+                    const li = document.createElement('li');
+                    li.textContent = emp.name;
+                    empList.appendChild(li);
+                    empNameInput.value = "";
+                })
+                .catch(error => console.error('직원 추가 오류 : ', error));
+            });
+        });
+    </script>
 </body>
 </html>
