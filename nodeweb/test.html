@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    this is test file
+    <hr/>
+    <input id="name" type="text" value="summer"/>
+    <button onclick="getSeason()">api 요청</button>
+    <script>
+        function getSeason() {
+            const name = document.querySelector("#name").value;
+
+            fetch(`http://localhost:3000/user/${name}`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+            })
+        }
+    </script>
+</body>
+</html>
