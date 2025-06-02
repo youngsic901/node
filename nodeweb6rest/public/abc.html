@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h3>모든 회원(get)</h3>
+        <button id="get-emps">모든 회원 정보</button>
+        <ul id="emp-list"></ul>
+    </div>
+
+    <div>
+        <h3>회원 추가(post)</h3>
+        <input type="text" id="new-emp-name" placeholder="이름" />
+        <input type="text" id="new-emp-position" placeholder="직업" />
+        <button id="add-emps">회원 추가</button>
+    </div>
+
+    <div>
+        <h3>회원 수정(put)</h3>
+        <input type="number" id="up-emp-id" placeholder="id" />
+        <input type="text" id="up-emp-name" placeholder="이름" />
+        <input type="text" id="up-emp-position" placeholder="직업" />
+        <button id="up-emps">회원 수정</button>
+    </div>
+    <div>
+        <h3>회원 삭제(delete)</h3>
+        <input type="number" id="del-emp-id" placeholder="id" />
+        <button id="del-emps">회원 삭제</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const empList = document.getElementById("emp-list");
+            const getEmpButton = document.getElementById("get-emps");
+            const addEmpButton = document.getElementById("add-emps");
+            const upEmpButton = document.getElementById("up-emps");
+            const delEmpButton = document.getElementById("del-emps");
+
+            // 전체 회원 요청
+            getEmpButton.addEventListener('click', () => {
+                fetch("/emp")
+                    .then(response => response.json())
+                    .then(data => {
+                        empList.innerHTML = ``;
+                        data.forEach(emp => {
+                            const li = document.createElement('li');
+                            li.textContent = `${emp.id} : ${emp.name}님은 ${emp.position}`;
+                            empList.appendChild(li);
+                        });
+                    })
+                    .catch(error => console.log('fetch err : ', error));
+            });
+
+            //회원 추가
+            addEmpButton.addEventListener('click', () => {
+                const name = document.getElementById("new-emp-name").value;
+                const position = document.getElementById("new-emp-position").value;
+
+                fetch('/emp', {
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({name, position})
+                })
+                .then(response => response.json())
+                .then(emp => {
+                    const li = document.createElement('li');
+                    li.textContent = `${emp.id} : ${emp.name}님은 ${emp.position}`;
+                    empList.appendChild(li);
+                })
+                .catch(error => console.log('add err : ', error));
+            });
+
+            //회원 수정
+            upEmpButton.addEventListener('click', () => {
+                const id = document.getElementById("up-emp-id").value;
+                const name = document.getElementById("up-emp-name").value;
+                const position = document.getElementById("up-emp-position").value;
+
+                fetch(`/emp/${id}`, {
+                    method:'PUT',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({name, position})
+                })
+                .then(response => {
+                    if(!response.ok) {
+                        throw new Error('response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(emp => {
+                    alert(`수정 자료 : ${emp.id} : ${emp.name} 님은 ${emp.position}`);
+                })  
+                .catch(error => console.log('add err : ', error));
+            });
+            //회원 삭제
+            delEmpButton.addEventListener('click', () => {
+                const id = document.getElementById("del-emp-id").value;
+
+                fetch(`/emp/${id}`, {
+                    method:'DELETE',
+                })
+                .then(response => {
+                    if(!response.ok) {
+                        throw new Error('response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(emp => {
+                    alert(`삭제 자료 : ${emp.id} : ${emp.name} 님은 ${emp.position}`);
+                })  
+                .catch(error => console.log('delete err : ', error));
+            });
+        });
+    </script>
+</body>
+</html>

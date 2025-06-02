@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script defer>
+        async function fetchSangdata() {
+            try{
+                const response = await fetch('/sangdata');
+                const datas = await response.json();
+
+                const tableBody = document.getElementById("data-body");
+                tableBody.innerHTML = "";
+
+                datas.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.code}</td>
+                        <td>${row.sang}</td>
+                        <td>${row.su}</td>
+                        <td>${row.dan}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            } catch(error) {
+                console.log('err : ', error);
+            }
+        }
+
+        fetchSangdata();
+    </script>
+</head>
+<body>
+    <h2>상품 정보</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>code</th><th>sang</th><th>su</th><th>dan</th>
+            </tr>
+        </thead>
+        <tbody id="data-body"></tbody>
+    </table>
+</body>
+</html>
