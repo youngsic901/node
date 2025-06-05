@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>상품 보기</h2>
+    <div id="controls">
+        <button onclick="location.href='/insert.html'">상품 추가</button>
+    </div>
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>코드</th><th>품명</th><th>수량</th><th>단가</th><th>관리</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <script>
+        async function getDataAll() {
+            try{
+                const response = await fetch('/sangdata');
+                const data = await response.json();
+                const tableBody = document.querySelector('#data-table tbody');
+                tableBody.innerHTML = '';
+
+                data.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.code}</td>
+                        <td>${row.sang}</td>
+                        <td>${row.su}</td>
+                        <td>${row.dan}</td>
+                        <td>
+                            <button onclick="editData(${row.code})">수정</button>
+                            <button onclick="deleteData(${row.code})">삭제</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            }catch(error) {
+                console.error('fetch err : ', error);
+                alert('fetch err');
+            }
+        }
+
+        // 수정 대상 자료를 읽어 update.html 호출
+        async function editData(code){
+            try{
+                const response = await fetch(`/sangdata/${code}`);
+                const data = await response.json();
+                if(data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                location.href=`/update.html?code=${data.code}&sang=${data.sang}&su=${data.su}&dan=${data.dan}`;
+            } catch(error) {
+                console.error('edit fetch error : ', error);
+            }
+        }
+
+        async function deleteData(code) {
+            if(confirm('정말 삭제하시겠습니까?')) {
+                const response = await fetch(`/sangdata/${code}`, {
+                    method:'DELETE'
+                });
+                const result = await response.json();
+                
+                if(result.message) {
+                    alert(result.message);
+                    getDataAll();
+                } else {
+                    alert(result.error);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', getDataAll);
+    </script>
+</body>
+</html>

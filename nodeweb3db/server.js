@@ -1,6 +1,5 @@
 import express from 'express';
 import mariadb from 'mariadb';
-import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -35,7 +34,7 @@ app.get('/sangdata', async(req, res) => {
 });
 
 // next 매개변수 : next가 없으면 현재 미들웨어에서 종료.
-// 미들웨어 함수 간의 흐름을 제어하는 콜백. next로 요청이 현재 미들웨어에서 다음 미들웨어로 넘어 가다록 제어
+// 미들웨어 함수 간의 흐름을 제어하는 콜백. next로 요청이 현재 미들웨어에서 다음 미들웨어로 넘어 가도록 제어
 app.use((req, res, next) => {
     res.status(404).send('페이지를 찾을 수 없습니다.');
 });

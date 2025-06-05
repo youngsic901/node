@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            fillData();
+            increaseCnt();
+        });
+        function fillData() {
+            const params = new URLSearchParams(window.location.search);
+            document.getElementById("num").innerText = '번호 : ' + params.get("num");
+            document.getElementById("author").innerText = '작성자 : ' + params.get("author") || '';
+            document.getElementById("title").innerText = '제목 : ' + params.get("title") || '';
+            document.getElementById("content").innerText = '본문 : ' + params.get("content") || '';
+            document.getElementById("bwrite").innerText = '작성일 : ' + params.get("bwrite") || '';
+            document.getElementById("readcnt").innerText = '조회수 : ' + params.get("readcnt") || '';
+        }
+        async function increaseCnt() {
+            const params = new URLSearchParams(window.location.search);
+            const num = params.get("num");
+            const data = {
+                readcnt:Number(params.get("readcnt")) + 1
+            }
+
+            try{
+                const response = await fetch(`/board/cnt/${num}`, {
+                    method:'PUT',
+                    headers:{'Content-Type':'application/json'},
+                    body:JSON.stringify(data),
+                });
+
+                const result = await response.json();
+                if(response.ok) {
+                    const newCnt = Number(params.get("readcnt")) + 1;
+                    document.getElementById("readcnt").innerText = '조회수 : ' + newCnt;
+                } else {
+                    // document.getElementById("output").textContent = `수정 오류 : ${JSON.stringify(result)}`;
+                }
+            } catch(error) {
+                console.err('error updating data : ', error);
+                alert('수정 에러');
+            }
+        }
+
+        async function deleteData() {
+            const params = new URLSearchParams(window.location.search);
+            const num = params.get("num");
+            if(confirm('정말 삭제하시겠습니까?')) {
+                const response = await fetch(`/board/${num}`, {
+                    method:'DELETE'
+                });
+                const result = await response.json();
+                
+                if(result.message) {
+                    alert(result.message);
+                    location.href="/select.html"
+                } else {
+                    alert(result.error);
+                }
+            }
+        }
+
+        async function moveUpdateForm() {
+            const params = new URLSearchParams(window.location.search);
+            const author = params.get("author");
+            const title = params.get("title");
+            const content = params.get("content");
+
+            location.href=`/update.html?author=${author}&title=${title}&content=${content}`
+        }
+    </script>
+</head>
+<body>
+    <h1>상세보기</h1>
+    <div>
+        <div id="num"></div>
+        <div id="author"></div>
+        <div id="title"></div>
+        <div id="content"></div>
+        <div id="bwrite"></div>
+        <div id="readcnt"></div>
+    </div>
+    <div id="controls">
+        <button onclick="moveUpdateForm()">수정</button>
+        <button onclick="deleteData()">삭제</button>
+    </div>
+</body>
+</html>

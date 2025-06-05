@@ -60,6 +60,41 @@ app.post('/sangdata', async(req, res) => {
     }
 });
 
+// update
+app.put('/sangdata/:code', async(req, res) => {
+    const {code} = req.params;
+    const {sang, su, dan} = req.body;
+    
+    try {
+        const conn = await dbpool.getConnection();
+        const result = await conn.query("update sangdata set sang=?, su=?, dan=? where code=?", [sang, su, dan, code]);
+        conn.release();
+        if(result.affectedRows === 0) {
+            res.status(404).json({error:'data not found'});
+        }
+        res.status(201).json({code, sang, su, dan});
+    } catch(error) {
+        res.status(500).json({error:error.message});
+    }
+});
+
+// delete
+app.delete('/sangdata/:code', async(req, res) => {
+    const {code} = req.params;
+    
+    try {
+        const conn = await dbpool.getConnection();
+        const result = await conn.query("delete from sangdata where code=?", [code]);
+        conn.release();
+        if(result.affectedRows === 0) {
+            res.status(404).json({error:'data not found'});
+        }
+        res.json({message: 'data deleted'});
+    } catch(error) {
+        res.status(500).json({error:error.message});
+    }
+});
+
 // 서버 서비스 설정
 const startServer = (app, port) => {
     app.listen(port, () => {
