@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis/dist/tfjs-vis.umd.min.js"></script>
+    <script type="module" >
+        import {abc} from './tf1js.js';
+        window.abc = abc;
+    </script>
+</head>
+<body>
+    데이터 분석 모듈(Tensorflow) 사용
+    <br>
+    <button onclick="abc()">결과보기</button>
+    <div id="aa"></div>
+</body>
+</html>

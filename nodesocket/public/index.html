@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>WebSocket Test</h2>
+    <input id="input" placeholder="메세지 입력">
+    <button onclick="sendMessage()">전송</button>
+    <pre id="show"></pre>
+
+    <script>
+        const socket = new WebSocket("ws://127.0.0.1:3000");
+
+        socket.onopen = () => logFunc('서버와 연결됨');
+        socket.onmessage = (e) => logFunc('서버: ' + e.data);
+        socket.onclose = () => logFunc('서버와 연결 종료');
+
+        function sendMessage() {
+            const msg = document.getElementById("input").value;
+            socket.send(msg);
+            logFunc("나 : " + msg);
+        }
+
+        function logFunc(msg){
+            document.getElementById("show").textContent += msg + "\n";
+        }
+    </script>
+</body>
+</html>

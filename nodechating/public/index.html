@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>채팅방</h2>
+    <div id="chat">서버와 연결중...</div>
+    <input id="msg" placeholder="메세지 입력" />
+    <button onclick="send()">보내기</button>
+
+    <script>
+        const chat = document.getElementById("chat");
+        const input = document.getElementById("msg");
+        const username = prompt('사용할 이름 입력') || '익명';
+        const socket = new WebSocket(`ws://${location.host}`);
+
+        socket.onopen = () => {
+            logFunc('서버와 연결됨');
+            socket.send(username);
+        }
+
+        socket.onmessage = (e) => {
+            logFunc(e.data);
+        }
+
+        socket.onclose = () => {
+            logFunc(`서버와 연결 종료됨`);
+        }
+
+        function logFunc(msg) {
+            const line = document.createElement('div');
+            line.textContent = msg;
+            if(msg.startsWith('현재 접속자:')) line.classList.add('userList');
+            chat.appendChild(line);
+
+            chat.scrollTop = chat.scrollHeight // 채팅창 스크롤을 항상 아래로 자동 이동 시킴
+        }
+
+        input.addEventListener('keypress', e => {
+            if(e.key === 'Enter') send();
+        });
+
+        function send(){
+            const text = input.value.trim();
+            if(text) {
+                socket.send(text);
+                input.value = "";
+            }
+        }
+    </script>
+</body>
+</html>
