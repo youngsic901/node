@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis/dist/tfjs-vis.umd.min.js"></script>
+    <style>
+        #loadingMessage{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>iris dataset을 이용한 분류</h2>
+    <button id="trainModelButton">모델 학습 시작</button>
+    <div id="loadingMessage">분류 모델 학습중...</div>
+    <p id="trainingStatus"></p>
+
+    <div id="input-container">
+        <h3>분류를 위한 꽃 특성 입력:</h3>
+        <label for="sepalLength">꽃받침 길이:</label>
+        <input type="number" id="sepalLength" step="0.1" /><br>
+        <label for="sepalWidth">꽃받침 너비:</label>
+        <input type="number" id="sepalWidth" step="0.1" /><br>
+        <label for="petalLength">꽃잎 길이:</label>
+        <input type="number" id="petalLength" step="0.1" /><br>
+        <label for="petalWidth">꽃잎 너비:</label>
+        <input type="number" id="petalWidth" step="0.1" /><br>
+        <button id="predictButton">분류 결과 확인</buttonj>
+    </div>
+
+    <p id="prediction-result"></p>
+
+    <div id="chart-container">
+        <div id="scatter-plot"></div>
+    </div>
+
+    <script type="module" src="./tf3.js">
+
+    </script>
+</body>
+</html>

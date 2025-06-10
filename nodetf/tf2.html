@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-
+        #result-container{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -15,16 +17,20 @@
     <div id="result-container">
         <div id="input-container">
             <label for="roomsInput">방 갯수 입력 : </label>
-            <input type="number" id="roomsInput" min="1" />
+            <input type="number" id="roomsInput" min="5"  value="6"/>
             <button id="predictButton">예측 가격 확인</button>
         </div>
         <div id="single-prediction-container">
             <h2>궁금한 방 갯수에 대한 예측 가격 : </h2>
             <p id="singlePrediction"></p>
         </div>
-        <div id="prediction-container">
+        <!-- <div id="prediction-container">
             <h2>실제값 방 갯수에 대한 가격 : </h2>
             <p id="singlePrediction"></p>
+        </div> -->
+        <div id="predictions-container">
+            <h2>실제값 방 갯수에 대한 예측 가격 : </h2>
+            <ul id="predictions-list"></ul>
         </div>
         <div id="chart-container">
             <div id="scatter-plot"></div>

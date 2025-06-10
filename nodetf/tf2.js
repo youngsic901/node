@@ -87,7 +87,22 @@ export async function runAnaylsis() {
 
         // 산포도 차트를 생성하여 실제값과 예측값 비교
         createScatterPlot(dataX, dataY, predictions);
+        displayPredictions(dataY, predictions);
     }
+
+    document.getElementById("result-container").style.display = "block";
+}
+
+// 실제값과 예측값을 목록으로 표시하는 함수
+function displayPredictions(dataY, predictions){
+    const predictionList = document.getElementById("predictions-list");
+    predictionList.innerHTML = '';
+
+    predictions.forEach((pred, index) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `실제값 : ${dataY[index].toFixed(2)}, 예측값 : ${pred.toFixed(2)}`;
+        predictionList.appendChild(listItem);
+    });
 }
 
 export async function predictPrice() {
@@ -100,7 +115,12 @@ export async function predictPrice() {
         const inputTensor = tf.tensor2d([parseFloat(roomsInput)], [1,1]);
 
         let prediction = model.predict(inputTensor).dataSync()[0];
-        console.log('예측된 가격 : ', prediction);
+        // console.log('예측된 가격 : ', prediction);
+        if(prediction < 0) {
+            prediction = 0;
+            console.log('방 갯수가 너무 적음');
+        }
+        document.getElementById("singlePrediction").textContent = `예측 가격은 ${prediction.toFixed(2)}`
     } else {
         document.getElementById("singlePrediction").textContent = '방 갯수 입력';
     }
